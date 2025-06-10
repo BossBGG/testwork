@@ -1,15 +1,16 @@
 import React from 'react'
+import Navbar from '~/components/shared/Navbar'
+import SwitchLayout from '~/components/shared/SwitchLayout'
+import FilterSection from '~/components/smart/FilterSection'
 
 const ImoDesignerPage = () => {
   return (
     <div>
-      <header>
-        <button>
-          <img src="../assets/bars-sort.png" alt="bars-sort" className='w-10'/>
-        </button>
+      <Navbar/>
+      <SwitchLayout/>
+      <FilterSection/>
+     
 
-        <img src="../assets/logo.png" alt="Logo" className='w-10'/>
-      </header>
     </div>
   )
 }
