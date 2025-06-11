@@ -81,8 +81,8 @@ const SwitchLayout = ({ viewMode = 'list', onViewModeChange }: SwitchLayoutProps
             <img 
               src={listicon} 
               alt="list" 
-              className={`w-4 h-4 transition-all ${
-                currentView === 'list' ? 'filter brightness-0 invert' : ''
+              className={`w-4 h-4 transition-all  ${
+                currentView === 'list' ? 'filter brightness-0  invert' : ''
               }`} 
             />
           </button>

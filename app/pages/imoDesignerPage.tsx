@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Navbar from '~/components/shared/Navbar';
 import SwitchLayout from '~/components/shared/SwitchLayout';
 import FilterSection from '~/components/smart/FilterSection';
+import GridDetail from '~/components/smart/GridDetail';
 import ImoDesignerDetail from '~/components/smart/imoDesignerDetail';
 
 const ImoDesignerPage = () => {
@@ -56,11 +57,9 @@ const ImoDesignerPage = () => {
             filterUser={filterUser}
             filterUpdate={filterUpdate}
           />
-        ) : (
-          <div className="text-center py-12 text-gray-500">
-            <p>Grid View - Coming Soon</p>
-            <p className="text-sm mt-2">ฟีเจอร์การแสดงผลแบบ Grid กำลังพัฒนา</p>
-          </div>
+        ) :  (
+          <GridDetail/>
+          
         )}
       </div>
     </div>

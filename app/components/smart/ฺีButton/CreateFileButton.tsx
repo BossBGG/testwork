@@ -32,7 +32,7 @@ const CreateFileButton = () => {
   const handleFileTypeSelect = (type: string) => {
     console.log("Selected file type:", type);
     setShowTypeFileDropdown(false);
-    // ที่นี่จะเพิ่มฟังก์ชันสร้างไฟล์ตามประเภท
+    
   };
 
   return (

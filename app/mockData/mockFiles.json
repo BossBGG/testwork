@@ -42,5 +42,27 @@
     "publishedAt": null,
     "updatedAt": "2025-05-01T10:00:00Z",
     "lastOpenedAt": "2025-06-09T18:30:00Z"
+  },
+  {
+    "fileName": "DepartmentFolders",
+    "fileType": "โฟลเดอร์",
+    "createdBy": "Aiana Park",
+    "sizeMB": 0.0,
+    "storageUsedMB": 0.0,
+    "createdAt": "2024-11-20T08:00:00Z",
+    "publishedAt": null,
+    "updatedAt": "2025-05-01T10:00:00Z",
+    "lastOpenedAt": "2025-06-09T18:30:00Z"
+  },
+  {
+    "fileName": "DepartmentFolders",
+    "fileType": "โฟลเดอร์",
+    "createdBy": "Biana Park",
+    "sizeMB": 0.0,
+    "storageUsedMB": 0.0,
+    "createdAt": "2024-11-20T08:00:00Z",
+    "publishedAt": null,
+    "updatedAt": "2025-05-01T10:00:00Z",
+    "lastOpenedAt": "2025-06-09T18:30:00Z"
   }
 ]

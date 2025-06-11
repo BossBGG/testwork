@@ -1,11 +1,119 @@
-import React from 'react'
+import React, { useState, useRef, useEffect } from "react";
+import mockFiles from "../../mockData/mockFiles.json";
+import FolderCard from "./Card/FolderCard";
+import FileCard from "./Card/FileCard";
 
-const gridDetail = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+interface FileData {
+  fileName: string;
+  fileType: string;
+  createdBy: string;
+  sizeMB: number;
+  storageUsedMB: number;
+  createdAt: string;
+  publishedAt: string | null;
+  updatedAt: string;
+  lastOpenedAt: string;
 }
 
-export default gridDetail
+interface GridDetailProps {
+  searchTerm?: string;
+  filterType?: string;
+  filterUser?: string;
+  filterUpdate?: string;
+}
+
+const GridDetail = ({
+  searchTerm = "",
+  filterType = "",
+  filterUser = "",
+  filterUpdate = "",
+}: GridDetailProps) => {
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("th-TH", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  const getFilteredFiles = () => {
+    let filteredFiles = mockFiles.filter((file) => {
+      const matchesSearch = file.fileName
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      const matchesType = filterType === "" || file.fileType === filterType;
+
+      const matchesUser = filterUser === "" || file.createdBy === filterUser;
+
+      const matchesUpdate = true;
+
+      return matchesSearch && matchesType && matchesUser && matchesUpdate;
+    });
+
+    return filteredFiles;
+  };
+
+  const handleMenuAction = (action: string, fileName: string) => {
+    console.log(`${action}  file: ${fileName}`);
+  };
+
+  const handleFolderClick = (folderName: string) => {
+    console.log(`Open folder: ${folderName}`);
+  };
+
+  const filteredFiles = getFilteredFiles();
+
+  const folders = filteredFiles.filter((file) => file.fileType === "โฟลเดอร์");
+  const files = filteredFiles.filter((file) => file.fileType !== "โฟลเดอร์");
+
+  return (
+    <div className="">
+      {filteredFiles.length > 0 ? (
+        <div className=" flex flex-col gap-4 p-4">
+          <div className="">
+            <div className="text-[14px] text-[#2A529C] ">โฟลเดอร์</div>
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-1">
+              {folders.map((folder: FileData) => (
+                <FolderCard
+                  key={folder.fileName}
+                  folderName={folder.fileName}
+                  updatedAt={formatDate(folder.updatedAt)}
+                  onMenuAction={handleMenuAction}
+                  onClick={() => handleFolderClick(folder.fileName)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div>
+              <div className="text-[14px] text-[#2A529C] ">ไฟล์</div>
+            </div>
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-1">
+              {files.map((file: FileData) => (
+              <FileCard
+                key={file.fileName}
+                fileName={file.fileName}
+                fileType={file.fileType}
+                updatedAt={formatDate(file.updatedAt)}
+                onMenuAction={handleMenuAction}
+              />
+            ))}
+            </div>
+            
+          </div>
+        </div>
+      ) : (
+        <div></div>
+      )}
+    </div>
+  );
+};
+
+export default GridDetail;

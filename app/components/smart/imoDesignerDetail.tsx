@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect }  from "react";
 import mockFiles from "../../mockData/mockFiles.json";
 import foldericon from "../../assets/folder.png";
 import KPIicon from "../../assets/KPI.png";
@@ -75,7 +75,7 @@ const ImoDesignerDetail = ({
       // กรองตามผู้สร้าง
       const matchesUser = filterUser === "" || file.createdBy === filterUser;
       
-      // กรองตามวันที่ (สำหรับ demo ยังไม่ implement logic การกรองวันที่)
+      // กรองตามวันที่ 
       const matchesUpdate = true; // TODO: implement date filtering
       
       return matchesSearch && matchesType && matchesUser && matchesUpdate;
