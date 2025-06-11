@@ -22,7 +22,9 @@ const FileCard = ({
 }: FileCardProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const [hasImage, setHasImage] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
   // ฟังก์ชันเลือกไอคอนตามประเภทไฟล์
   const getFileIcon = (type: string) => {
@@ -60,6 +62,28 @@ const FileCard = ({
     });
   };
 
+  // คำนวณตำแหน่ง dropdown (ใช้ตำแหน่งสัมพัทธ์กับ card)
+  const calculateMenuPosition = () => {
+    if (buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const cardElement = buttonRef.current.closest('.file-card-container');
+      
+      if (cardElement) {
+        const cardRect = cardElement.getBoundingClientRect();
+        const menuWidth = 192; // ประมาณความกว้างของ menu (w-48 = 192px)
+        
+        // คำนวณตำแหน่งสัมพัทธ์กับ card
+        const relativeTop = buttonRect.bottom - cardRect.top + 4;
+        const relativeLeft = buttonRect.right - cardRect.left - menuWidth;
+        
+        setMenuPosition({ 
+          top: relativeTop, 
+          left: relativeLeft 
+        });
+      }
+    }
+  };
+
   // ปิด menu เมื่อคลิกข้างนอก
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -79,6 +103,13 @@ const FileCard = ({
     setShowMenu(false);
   };
 
+  const handleMenuButtonClick = () => {
+    if (!showMenu) {
+      calculateMenuPosition();
+    }
+    setShowMenu(!showMenu);
+  };
+
   const menuItems = [
     { icon: "✏️", label: "แก้ไข", action: "edit" },
     { icon: "🔗", label: "แชร์", action: "share" },
@@ -88,84 +119,88 @@ const FileCard = ({
   ];
 
   return (
-    <div className="w-[282px] h-[302px] bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow relative group">
-      {/* Header with menu button */}
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex-1">
-          {/* File Icon Container */}
-          <div className="w-[259px] h-[208px] mb-3 mr-3 bg-[#F8F9FC] flex items-center justify-center mx-auto">
-            {hasImage ? (
-              <img
-                src={fileImage}
-                alt={fileType}
-                className="w-[69px] h-[55px] object-contain"
-              />
-            ) : (
-              <div>
-                <DefaultImage />
-              </div>
-            )}
+    <>
+      <div className="file-card-container w-[282px] h-[302px] bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow relative group">
+        {/* Header with menu button */}
+        <div className="flex justify-between items-start mb-3">
+          <div className="flex-1">
+            {/* File Icon Container */}
+            <div className="w-[259px] h-[208px] mb-3 mr-3 bg-[#F8F9FC] flex items-center justify-center mx-auto">
+              {hasImage ? (
+                <img
+                  src={fileImage}
+                  alt={fileType}
+                  className="w-[69px] h-[55px] object-contain"
+                />
+              ) : (
+                <div>
+                  <DefaultImage />
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* File Name with Menu Button */}
-      <div className="flex justify-between items-start mb-2">
-        {/* File Name */}
-        <h3 className="text-sm font-medium text-gray-900 line-clamp-2 leading-tight flex-1 mr-2">
-          {fileName}
-        </h3>
+        {/* File Name with Menu Button */}
+        <div className="flex justify-between items-center mb-2">
+          {/* File Name */}
+          <h3 className="text-sm font-medium text-gray-900 line-clamp-2 leading-tight flex-1 mr-2 ">
+            {fileName}
+          </h3>
 
-        {/* Menu Button - ย้ายออกมาจาก h3 */}
-        <div className="relative flex-shrink-0" ref={menuRef}>
-          <button
-            onClick={() => setShowMenu(!showMenu)}
-            className="transition-opacity p-1 rounded-full hover:bg-gray-100"
-          >
-            <svg
-              className="w-5 h-5 text-gray-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
+          {/* Menu Button - อยู่แนวนอนตรงกลาง */}
+          <div className="relative flex-shrink-0 flex items-center">
+            <button
+              ref={buttonRef}
+              onClick={handleMenuButtonClick}
+              className="transition-opacity p-1 rounded-full hover:bg-gray-100 flex items-center justify-center"
             >
-              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-            </svg>
-          </button>
-
-          {/* Dropdown Menu */}
-          {showMenu && (
-            <div 
-              className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50"
-              style={{ 
-                position: 'fixed',
-                zIndex: 9999,
-                transform: 'translateX(-100%)',
-                marginTop: '4px'
-              }}
-            >
-              {menuItems.map((item) => (
-                <button
-                  key={item.action}
-                  onClick={() => handleMenuAction(item.action)}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100 transition-colors ${
-                    item.action === "delete"
-                      ? "text-red-600 hover:bg-red-50"
-                      : "text-gray-700"
-                  }`}
-                >
-                  <span className="text-base">{item.icon}</span>
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          )}
+              <svg
+                className="w-5 h-5 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Update Date */}
-      <p className="text-xs text-gray-500">
-        วันที่อัปเดต: {formatDate(updatedAt)}
-      </p>
-    </div>
+        {/* Update Date  */}
+        <div className="mt-auto pb-1">
+          <p className="text-xs text-gray-500">
+            วันที่อัปเดต: {formatDate(updatedAt)}
+          </p>
+        </div>
+
+        {/* Dropdown Menu  */}
+        {showMenu && (
+          <div 
+            ref={menuRef}
+            className="absolute bg-white border border-gray-200 rounded-md shadow-lg z-50 w-48"
+            style={{
+              top: `${menuPosition.top}px`,
+              left: `${menuPosition.left}px`,
+            }}
+          >
+            {menuItems.map((item) => (
+              <button
+                key={item.action}
+                onClick={() => handleMenuAction(item.action)}
+                className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100 transition-colors ${
+                  item.action === "delete"
+                    ? "text-red-600 hover:bg-red-50"
+                    : "text-gray-700"
+                }`}
+              >
+                <span className="text-base">{item.icon}</span>
+                {item.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

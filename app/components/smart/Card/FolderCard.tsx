@@ -16,6 +16,7 @@ const FolderCard = ({
 }: FolderCardProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
   // ฟังก์ชันแปลงวันที่
   const formatDate = (dateString: string) => {
@@ -61,7 +62,7 @@ const FolderCard = ({
 
   return (
     <div
-      className="w-[282px] h-[82px] bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-shadow cursor-pointer relative group overflow-hidden flex flex-col justify-between"
+      className="w-[282px] h-[82px] bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-shadow cursor-pointer relative group flex flex-col justify-between"
       onClick={onClick}
     >
       {/* Top Section - Content Container */}
@@ -103,7 +104,12 @@ const FolderCard = ({
 
           {/* Dropdown Menu */}
           {showMenu && (
-            <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-20">
+            <div 
+            ref={menuRef}
+            className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-60"
+            
+            >
+            
               {menuItems.map((item) => (
                 <button
                   key={item.action}
