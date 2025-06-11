@@ -53,6 +53,53 @@ const ImoDesignerDetail = ({
     });
   };
 
+  // ฟังก์ชันตรวจสอบวันที่ตาม filter
+  const isDateInRange = (dateString: string | null, filterUpdate: string) => {
+    if (!filterUpdate || !dateString) return true;
+    
+    const fileDate = new Date(dateString);
+    const today = new Date();
+    today.setHours(23, 59, 59, 999); // สิ้นสุดวัน
+    
+    switch (filterUpdate) {
+      case 'today':
+        const startOfToday = new Date(today);
+        startOfToday.setHours(0, 0, 0, 0);
+        return fileDate >= startOfToday && fileDate <= today;
+        
+      case '7days':
+        const sevenDaysAgo = new Date(today);
+        sevenDaysAgo.setDate(today.getDate() - 7);
+        return fileDate >= sevenDaysAgo && fileDate <= today;
+        
+      case '30days':
+        const thirtyDaysAgo = new Date(today);
+        thirtyDaysAgo.setDate(today.getDate() - 30);
+        return fileDate >= thirtyDaysAgo && fileDate <= today;
+        
+      case 'thisYear':
+        const startOfYear = new Date(today.getFullYear(), 0, 1);
+        const endOfYear = new Date(today.getFullYear(), 11, 31, 23, 59, 59, 999);
+        return fileDate >= startOfYear && fileDate <= endOfYear;
+        
+      case 'lastYear':
+        const lastYear = today.getFullYear() - 1;
+        const startOfLastYear = new Date(lastYear, 0, 1);
+        const endOfLastYear = new Date(lastYear, 11, 31, 23, 59, 59, 999);
+        return fileDate >= startOfLastYear && fileDate <= endOfLastYear;
+        
+      default:
+        // Handle custom date range (format: "YYYY-MM-DD_YYYY-MM-DD")
+        if (filterUpdate.includes('_')) {
+          const [startDate, endDate] = filterUpdate.split('_');
+          const start = new Date(startDate + 'T00:00:00');
+          const end = new Date(endDate + 'T23:59:59');
+          return fileDate >= start && fileDate <= end;
+        }
+        return true;
+    }
+  };
+
   // ฟังก์ชันเรียงข้อมูล
   const sortFiles = (field: SortField) => {
     if (sortField === field) {
@@ -66,7 +113,7 @@ const ImoDesignerDetail = ({
   // ฟังก์ชันกรองข้อมูล
   const getFilteredAndSortedFiles = () => {
     let filteredFiles = files.filter(file => {
-      // กรองตามชื่อไฟล์
+      // กรองตามชื่อไฟล์ (ค้นหาแบบ case-insensitive)
       const matchesSearch = file.fileName.toLowerCase().includes(searchTerm.toLowerCase());
       
       // กรองตามประเภท
@@ -75,8 +122,8 @@ const ImoDesignerDetail = ({
       // กรองตามผู้สร้าง
       const matchesUser = filterUser === "" || file.createdBy === filterUser;
       
-      // กรองตามวันที่ 
-      const matchesUpdate = true; 
+      // กรองตามวันที่อัปเดต
+      const matchesUpdate = isDateInRange(file.updatedAt, filterUpdate);
       
       return matchesSearch && matchesType && matchesUser && matchesUpdate;
     });
@@ -150,7 +197,6 @@ const ImoDesignerDetail = ({
   const handleMenuAction = (action: string, fileName: string) => {
     console.log(`${action} file: ${fileName}`);
     setOpenDropdown(null);
-    // TODO: implement actual actions
   };
 
   const menuItems = [
@@ -185,7 +231,7 @@ const ImoDesignerDetail = ({
                   <img src={sortIcon} alt="sort" className="w-2 h-3" />
                   {sortField === 'createdAt' && (
                     <span className="text-blue-600">
-                      {sortOrder === 'desc' }
+                      {sortOrder === 'desc' ? '↓' : '↑'}
                     </span>
                   )}
                 </div>
@@ -200,7 +246,7 @@ const ImoDesignerDetail = ({
                   <img src={sortIcon} alt="sort" className="w-2 h-3" />
                   {sortField === 'updatedAt' && (
                     <span className="text-blue-600">
-                      {sortOrder === 'desc' }
+                      {sortOrder === 'desc' ? '↓' : '↑'}
                     </span>
                   )}
                 </div>
@@ -215,7 +261,7 @@ const ImoDesignerDetail = ({
                   <img src={sortIcon} alt="sort" className="w-2 h-3" />
                   {sortField === 'publishedAt' && (
                     <span className="text-blue-600">
-                      {sortOrder === 'desc' }
+                      {sortOrder === 'desc' ? '↓' : '↑'}
                     </span>
                   )}
                 </div>
@@ -243,12 +289,15 @@ const ImoDesignerDetail = ({
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full overflow-visible bg-gray-200 flex items-center justify-center relative group cursor-pointer">
                         <img 
                           src={avatar} 
                           alt="profile" 
-                          className="w-8 h-8 object-cover" 
+                          className="w-8 h-8 object-cover rounded-full" 
                         />
+                        <div className="absolute -left-2 top-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg animate-wave">
+                          👋
+                        </div>
                       </div>
                       <span className="text-sm text-gray-900">
                         {file.createdBy}

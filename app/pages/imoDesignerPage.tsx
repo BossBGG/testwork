@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '~/components/shared/Navbar';
 import SwitchLayout from '~/components/shared/SwitchLayout';
@@ -57,9 +56,13 @@ const ImoDesignerPage = () => {
             filterUser={filterUser}
             filterUpdate={filterUpdate}
           />
-        ) :  (
-          <GridLayout/>
-          
+        ) : (
+          <GridLayout
+            searchTerm={searchTerm}
+            filterType={filterType}
+            filterUser={filterUser}
+            filterUpdate={filterUpdate}
+          />
         )}
       </div>
     </div>
