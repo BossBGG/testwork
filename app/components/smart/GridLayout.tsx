@@ -97,7 +97,7 @@ const GridLayout = ({
             {/* Folders Section */}
             <div className="">
               <div className="text-[14px] text-[#2A529C]">โฟลเดอร์</div>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {folders.map((folder: FileData) => (
                   <FolderCard
                     key={folder.fileName}
@@ -115,7 +115,7 @@ const GridLayout = ({
               <div>
                 <div className="text-[14px] text-[#2A529C]">ไฟล์</div>
               </div>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8  ">
                 {files.map((file: FileData) => (
                   <div
                     key={file.fileName}

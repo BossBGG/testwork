@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import foldericon from "../../assets/folder.png";
 import KPIicon from "../../assets/KPI.png";
 import BIicon from "../../assets/BI.png";
 import CVicon from "../../assets/CV.png";
+import folderfieldicon from "../../assets/folder2.png";
+
 interface FileData {
   fileName: string;
   fileType: string;
@@ -21,14 +24,46 @@ interface GridDetailProps {
 }
 
 const GridDetail = ({ selectedFile, onClose }: GridDetailProps) => {
+  const [description, setDescription] = useState("");
+  const maxWords = 250;
+
+  // ฟังก์ชันเลือกไอคอนตามประเภทไฟล์
+  const getFileIcon = (type: string) => {
+    switch (type) {
+      case "โฟลเดอร์":
+        return folderfieldicon;
+      case "KPI":
+        return KPIicon;
+      case "BI":
+        return BIicon;
+      case "Customize View":
+        return CVicon;
+      default:
+        return foldericon;
+    }
+  };
+
+  // ฟังก์ชันนับคำ
+  const countWords = (text: string) => {
+    return text
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
+  };
+
+  // ฟังก์ชันจัดการการเปลี่ยนแปลงของ textarea
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const text = e.target.value;
+    const wordCount = countWords(text);
+
+    if (wordCount <= maxWords) {
+      setDescription(text);
+    }
+  };
+
   // ฟังก์ชันแปลงวันที่
-
-  const fileTypes = [
-    { icon: CVicon, name: "Customize View", type: "customize" },
-    { icon: BIicon, name: "BI", type: "bi" },
-    { icon: KPIicon, name: "KPI", type: "kpi" },
-  ];
-
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "-";
     const date = new Date(dateString);
@@ -69,7 +104,7 @@ const GridDetail = ({ selectedFile, onClose }: GridDetailProps) => {
     <div className="bg-[#F8F9FC] rounded-lg border border-gray-200 p-6 shadow-sm">
       {/* Header with close button */}
       <div className="flex justify-between items-center mb-4">
-        <p className="text-lg font-medium text-gray-900">
+        <p className="text-lg font-medium text-[#2A529C]">
           {selectedFile.fileName}
         </p>
 
@@ -94,111 +129,144 @@ const GridDetail = ({ selectedFile, onClose }: GridDetailProps) => {
           </button>
         )}
       </div>
-      <div className="bg-white rounded-lg">
-        <div className="flex justify-between items-start mb-6 ">
+
+      <div className="bg-white rounded-lg p-6">
+        <div className="flex justify-between items-start mb-6">
           <h2 className="text-xl font-semibold text-gray-900">
             รายละเอียดไฟล์
           </h2>
         </div>
 
-        {
-          selectedFile.fileimage && (
-            <div className="flex items-center justify-center mb-6">
+        {/* File Image/Icon */}
+        <div className="flex items-center justify-center mb-6">
+          {selectedFile.fileimage ? (
+            <img
+              src={selectedFile.fileimage}
+              alt={selectedFile.fileName}
+              className="w-[378px] h-[250px] object-contain rounded-md "
+            />
+          ) : (
+            <div className="w-[378px] h-[250px] bg-[#F8F9FC] flex items-center justify-center rounded-md ">
               <img
-                src={selectedFile.fileimage}
-                alt={selectedFile.fileName}
-                className="w-[378] h-[250]"
+                src={getFileIcon(selectedFile.fileType)}
+                alt={selectedFile.fileType}
+                className="w-[69px] h-[55px] object-contain"
               />
             </div>
-          )
-        }
+          )}
+        </div>
 
-        {/* File Info Grid */}
-        <div className="">
-          
-          <div className="space-y-4">
-            <div>
-              <label className="flex flex-row justify-between text-sm font-medium text-gray-500 mb-1 ">
-                <div>
-                  ประเภทไฟล์ 
-                </div>
-                
-                <div>
-                  {selectedFile.fileType}
-                </div>
-                
-              </label>
-            </div>
+        {/* File Info */}
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-gray-500">
+              ประเภทไฟล์
+            </span>
 
-            <div className="w-auto h-[2px] bg-gray-500"/>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
-                ขนาดไฟล์ 
-                {selectedFile.sizeMB} 
-              </label>
-            </div>
-
-            <div className="w-auto h-[2px] bg-gray-500"/>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
-                พื้นที่เก็บข้อมูลที่ใช้ 
-                {selectedFile.storageUsedMB} 
-              </label>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
-                ผู้สร้าง 
-                {selectedFile.createdBy}
-              </label>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
-                แก้ไขเมื่อ
-                {formatDate(selectedFile.updatedAt)}
-              </label>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
-                เปิดเมื่อ
-                {formatDate(selectedFile.lastOpenedAt)}
-              </label>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
-                เผยแพร่เมื่อ
-                {formatDate(selectedFile.publishedAt)}
-              </label>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
-                สร้างเมื่อ
-                {formatDate(selectedFile.createdAt)}
-              </label>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
-              คำอธิบาย   
-              </label>       
-
-              <textarea name="" id="">
-              
-              </textarea>
+            <div className="flex items-center gap-2 mr-4">
+              <img
+                src={getFileIcon(selectedFile.fileType)}
+                alt={selectedFile.fileType}
+                className="w-6 h-6"
+              />
+              <span className="text-sm text-gray-900 ">
+              {selectedFile.fileType}
+            </span>
             </div>
             
           </div>
 
-          
-        </div>
+          <div className="w-full h-[2px] bg-gray-300" />
 
-        
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-gray-500">ขนาดไฟล์</span>
+            <span className="text-sm text-gray-900 mr-4">
+              {selectedFile.sizeMB} MB
+            </span>
+          </div>
+
+          <div className="w-full h-[2px] bg-gray-300" />
+
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-gray-500">
+              พื้นที่เก็บข้อมูลที่ใช้
+            </span>
+            <span className="text-sm text-gray-900 mr-4">
+              {selectedFile.storageUsedMB} MB
+            </span>
+          </div>
+
+          <div className="w-full h-[2px] bg-gray-300" />
+
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-gray-500">ผู้สร้าง</span>
+            <span className="text-sm text-gray-900 mr-4">
+              {selectedFile.createdBy}
+            </span>
+          </div>
+
+          <div className="w-full h-[2px] bg-gray-300" />
+
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-gray-500">
+              แก้ไขเมื่อ
+            </span>
+            <span className="text-sm text-gray-900 mr-4">
+              {formatDate(selectedFile.updatedAt)}
+            </span>
+          </div>
+
+          <div className="w-full h-[2px] bg-gray-300" />
+
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-gray-500">เปิดเมื่อ</span>
+            <span className="text-sm text-gray-900 mr-4">
+              {formatDate(selectedFile.lastOpenedAt)}
+            </span>
+          </div>
+
+          <div className="w-full h-[2px] bg-gray-300" />
+
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-gray-500">
+              เผยแพร่เมื่อ
+            </span>
+            <span className="text-sm text-gray-900 mr-4">
+              {formatDate(selectedFile.publishedAt)}
+            </span>
+          </div>
+
+          <div className="w-full h-[2px] bg-gray-300" />
+
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-gray-500">
+              สร้างเมื่อ
+            </span>
+            <span className="text-sm text-gray-900 mr-4">
+              {formatDate(selectedFile.createdAt)}
+            </span>
+          </div>
+
+          <div className="w-full h-[2px] bg-gray-300" />
+
+          {/* Description Section */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-500">
+              คำอธิบาย
+            </label>
+            <div className="relative">
+              <textarea
+                value={description}
+                onChange={handleDescriptionChange}
+                placeholder="เพิ่มคำอธิบายไฟล์..."
+                className="w-full h-24 p-3 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <div className="absolute bottom-2 right-2 text-xs text-gray-400">
+                {countWords(description)}/{maxWords}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

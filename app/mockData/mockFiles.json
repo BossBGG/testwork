@@ -12,6 +12,18 @@
     "image": "test-img.png"
   },
   {
+    "fileName": "SalesReport2023",
+    "fileType": "BI",
+    "createdBy": "Alice Smith",
+    "sizeMB": 12.5,
+    "storageUsedMB": 12.5,
+    "createdAt": "2024-12-01T10:30:00Z",
+    "publishedAt": "2024-12-02T08:00:00Z",
+    "updatedAt": "2025-01-05T14:20:00Z",
+    "lastOpenedAt": "2025-06-09T13:00:00Z",
+    "image": "test-img.png"
+  },
+  {
     "fileName": "MarketingDashboard",
     "fileType": "Customize View",
     "createdBy": "Bob Johnson",
@@ -22,6 +34,29 @@
     "updatedAt": "2025-03-10T11:00:00Z",
     "lastOpenedAt": "2025-06-08T09:30:00Z",
     "image": "test-img.png"
+  },
+  {
+    "fileName": "MarketingDashboard2",
+    "fileType": "Customize View",
+    "createdBy": "Bob Johnson",
+    "sizeMB": 7.3,
+    "storageUsedMB": 7.3,
+    "createdAt": "2025-02-15T09:15:00Z",
+    "publishedAt": "2025-02-20T10:45:00Z",
+    "updatedAt": "2025-03-10T11:00:00Z",
+    "lastOpenedAt": "2025-06-08T09:30:00Z"
+  },
+  {
+    "fileName": "MarketingDashboard3",
+    "fileType": "Customize View",
+    "createdBy": "Bob Johnson",
+    "sizeMB": 7.3,
+    "storageUsedMB": 7.3,
+    "createdAt": "2025-02-15T09:15:00Z",
+    "publishedAt": "2025-02-20T10:45:00Z",
+    "updatedAt": "2025-03-10T11:00:00Z",
+    "lastOpenedAt": "2025-06-08T09:30:00Z"
+    
   },
   {
     "fileName": "PerformanceKPI_Q1",
@@ -36,7 +71,19 @@
     "image": "test-img.png"
   },
   {
-    "fileName": "DepartmentFolders",
+    "fileName": "PerformanceKPI_Q2",
+    "fileType": "KPI",
+    "createdBy": "Charlie Lee",
+    "sizeMB": 5.0,
+    "storageUsedMB": 5.0,
+    "createdAt": "2025-01-10T14:00:00Z",
+    "publishedAt": "2025-01-12T12:00:00Z",
+    "updatedAt": "2025-02-18T16:00:00Z",
+    "lastOpenedAt": "2025-06-07T08:00:00Z",
+    "image": "test-img.png"
+  },
+  {
+    "fileName": "DepartmentFolders3",
     "fileType": "โฟลเดอร์",
     "createdBy": "Diana Park",
     "sizeMB": 0.0,
@@ -47,7 +94,7 @@
     "lastOpenedAt": "2025-06-09T18:30:00Z"
   },
   {
-    "fileName": "DepartmentFolders",
+    "fileName": "DepartmentFolders1",
     "fileType": "โฟลเดอร์",
     "createdBy": "Aiana Park",
     "sizeMB": 0.0,
@@ -58,7 +105,7 @@
     "lastOpenedAt": "2025-06-09T18:30:00Z"
   },
   {
-    "fileName": "DepartmentFolders",
+    "fileName": "DepartmentFolders2",
     "fileType": "โฟลเดอร์",
     "createdBy": "Biana Park",
     "sizeMB": 0.0,
