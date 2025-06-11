@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Navbar from '~/components/shared/Navbar';
 import SwitchLayout from '~/components/shared/SwitchLayout';
 import FilterSection from '~/components/smart/FilterSection';
-import GridDetail from '~/components/smart/GridDetail';
+import GridLayout from '~/components/smart/GridLayout';
 import ImoDesignerDetail from '~/components/smart/imoDesignerDetail';
 
 const ImoDesignerPage = () => {
@@ -58,7 +58,7 @@ const ImoDesignerPage = () => {
             filterUpdate={filterUpdate}
           />
         ) :  (
-          <GridDetail/>
+          <GridLayout/>
           
         )}
       </div>

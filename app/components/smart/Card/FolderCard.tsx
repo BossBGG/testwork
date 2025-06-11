@@ -87,10 +87,10 @@ const FolderCard = ({
         </div>
 
         {/* Right side - Menu Button */}
-        <div className="relative flex-shrink-0" ref={menuRef}>
+        <div className="relative flex-shrink-0 items-center justify-content-center" ref={menuRef}>
           <button
             onClick={handleMenuButtonClick}
-            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-full hover:bg-gray-100"
+            className="transition-opacity p-1 rounded-full hover:bg-gray-100"
           >
             <svg
               className="w-4 h-4 text-gray-400"

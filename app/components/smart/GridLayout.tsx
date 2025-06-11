@@ -13,6 +13,7 @@ interface FileData {
   publishedAt: string | null;
   updatedAt: string;
   lastOpenedAt: string;
+  fileimage?: string;
 }
 
 interface GridDetailProps {
@@ -22,7 +23,7 @@ interface GridDetailProps {
   filterUpdate?: string;
 }
 
-const GridDetail = ({
+const GridLayout = ({
   searchTerm = "",
   filterType = "",
   filterUser = "",
@@ -101,6 +102,7 @@ const GridDetail = ({
                 key={file.fileName}
                 fileName={file.fileName}
                 fileType={file.fileType}
+                fileImage={file.fileimage}
                 updatedAt={formatDate(file.updatedAt)}
                 onMenuAction={handleMenuAction}
               />
@@ -116,4 +118,4 @@ const GridDetail = ({
   );
 };
 
-export default GridDetail;
+export default GridLayout;
