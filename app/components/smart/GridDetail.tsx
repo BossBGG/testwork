@@ -183,11 +183,22 @@ const GridDetail = ({ selectedFile, onClose }: GridDetailProps) => {
               </label>
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-500 mb-1">
+              คำอธิบาย   
+              </label>       
+
+              <textarea name="" id="">
+              
+              </textarea>
+            </div>
             
           </div>
 
           
         </div>
+
+        
       </div>
     </div>
   );
