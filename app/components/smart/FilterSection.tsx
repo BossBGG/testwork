@@ -11,13 +11,15 @@ interface FilterSectionProps {
   onTypeFilterChange?: (type: string) => void;
   onUserFilterChange?: (user: string) => void;
   onUpdateFilterChange?: (dateRange: string) => void;
+  onFileCreated?: (newFile: any) => void;
 }
 
 const FilterSection = ({ 
   onSearchChange, 
   onTypeFilterChange, 
   onUserFilterChange, 
-  onUpdateFilterChange 
+  onUpdateFilterChange,
+  onFileCreated
 }: FilterSectionProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('');
@@ -52,12 +54,18 @@ const FilterSection = ({
     }
   };
 
+  const handleFileCreated = (newFile: any) => {
+    if (onFileCreated) {
+      onFileCreated(newFile);
+    }
+  };
+
   return (
     <div>
       <div className='flex flex-row justify-between items-center p-4'>
         {/* Left side - CreateFileButton + About Icon + Filter Buttons */}
         <div className='flex flex-row items-center gap-6'>
-          <CreateFileButton />
+          <CreateFileButton onFileCreated={handleFileCreated} />
           
           <img src={abouticon} alt="about" className='w-6 h-6' />
           

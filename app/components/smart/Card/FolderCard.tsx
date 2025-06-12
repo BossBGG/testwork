@@ -41,7 +41,7 @@ const FolderCard = ({
   }, []);
 
   const handleMenuAction = (action: string, event: React.MouseEvent) => {
-    event.stopPropagation(); // ป้องกันไม่ให้เรียก onClick ของ card
+    event.stopPropagation(); 
     if (onMenuAction) {
       onMenuAction(action, folderName);
     }
@@ -49,7 +49,7 @@ const FolderCard = ({
   };
 
   const handleMenuButtonClick = (event: React.MouseEvent) => {
-    event.stopPropagation(); // ป้องกันไม่ให้เรียก onClick ของ card
+    event.stopPropagation(); 
     setShowMenu(!showMenu);
   };
 
@@ -114,11 +114,7 @@ const FolderCard = ({
                 <button
                   key={item.action}
                   onClick={(e) => handleMenuAction(item.action, e)}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100 transition-colors ${
-                    item.action === "delete"
-                      ? "text-red-600 hover:bg-red-50"
-                      : "text-gray-700"
-                  }`}
+                  className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100 transition-colors `}
                 >
                   <span className="text-base">{item.icon}</span>
                   {item.label}

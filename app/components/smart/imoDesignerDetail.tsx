@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect }  from "react";
-import mockFiles from "../../mockData/mockFiles.json";
 import foldericon from "../../assets/folder.png";
 import KPIicon from "../../assets/KPI.png";
 import BIicon from "../../assets/BI.png";
@@ -25,6 +24,7 @@ interface ImoDesignerDetailProps {
   filterType?: string;
   filterUser?: string;
   filterUpdate?: string;
+  files?: FileData[];
 }
 
 type SortField = 'createdAt' | 'updatedAt' | 'publishedAt';
@@ -34,9 +34,9 @@ const ImoDesignerDetail = ({
   searchTerm = "", 
   filterType = "", 
   filterUser = "", 
-  filterUpdate = "" 
+  filterUpdate = "",
+  files = []
 }: ImoDesignerDetailProps) => {
-  const [files] = useState<FileData[]>(mockFiles);
   const [sortField, setSortField] = useState<SortField>('updatedAt');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -333,9 +333,7 @@ const ImoDesignerDetail = ({
                             <button
                               key={item.action}
                               onClick={() => handleMenuAction(item.action, file.fileName)}
-                              className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100 transition-colors ${
-                                item.action === 'delete' ? 'text-red-600 hover:bg-red-50' : 'text-gray-700'
-                              }`}
+                              className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100 transition-colors `}
                             >
                               <span className="text-base">{item.icon}</span>
                               {item.label}

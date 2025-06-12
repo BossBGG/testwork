@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import searchIcon from "../../../assets/search.png";
 import avatar from "../../../assets/Avatar.png";
@@ -17,12 +16,13 @@ const FilterUserButton = ({ onFilterChange, selectedUser = "" }: FilterUserButto
   // รายการผู้ใช้ล่าสุด (สามารถเก็บใน localStorage หรือ state management)
   const [recentUsers, setRecentUsers] = useState<string[]>([
     "Alice Smith",
-    "Bob Johnson", 
+    "Bob Johnson",
     "Charlie Lee"
   ]);
 
   // รายการผู้ใช้ทั้งหมด (จริงๆ ควรมาจาก API)
   const allUsers = [
+
     "Alice Smith",
     "Bob Johnson",
     "Charlie Lee",
@@ -44,6 +44,17 @@ const FilterUserButton = ({ onFilterChange, selectedUser = "" }: FilterUserButto
   }, []);
 
   const handleSelect = (user: string) => {
+    // ถ้าคลิกผู้ใช้เดียวกันกับที่เลือกอยู่ ให้ยกเลิกการกรอง
+    if (selected === user) {
+      setSelected("");
+      setIsOpen(false);
+      setSearchTerm("");
+      if (onFilterChange) {
+        onFilterChange("");
+      }
+      return;
+    }
+
     setSelected(user);
     setIsOpen(false);
     setSearchTerm("");
@@ -113,14 +124,6 @@ const FilterUserButton = ({ onFilterChange, selectedUser = "" }: FilterUserButto
 
           {/* Options */}
           <div className="max-h-48 overflow-y-auto">
-            {/* Clear filter option */}
-            {/* <button
-              onClick={clearFilter}
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors text-sm text-gray-700 border-b border-gray-100"
-            >
-              ทั้งหมด
-            </button> */}
-
             {/* Recent users */}
             {!searchTerm && recentUsers.length > 0 && (
               <>
@@ -131,20 +134,40 @@ const FilterUserButton = ({ onFilterChange, selectedUser = "" }: FilterUserButto
                   <button
                     key={`recent-${user}`}
                     onClick={() => handleSelect(user)}
-                    className={`flex flex-row items-center w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors text-sm ${
+                    className={`flex flex-row items-center justify-between w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors text-sm ${
                       selected === user ? 'bg-blue-50 text-[#2A529C]' : 'text-gray-700'
                     }`}
                   >
-                    <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-                      <img 
-                        src={avatar} 
-                        alt="profile" 
-                        className="w-8 h-8 object-cover" 
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                        <img 
+                          src={avatar} 
+                          alt="profile" 
+                          className="w-8 h-8 object-cover" 
+                        />
+                      </div>
+                      <div className="ml-3">
+                        {user}
+                      </div>
+                    </div>
+                    {/* เพิ่ม SVG arrow */}
+                    <svg 
+                      className="w-4 h-4 text-gray-400"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="m9 5 7 7-7 7"
                       />
-                    </div>
-                    <div className="ml-3">
-                      {user}
-                    </div>
+                    </svg>
                   </button>
                 ))}
                 <div className="border-b border-gray-100"></div>
@@ -161,20 +184,40 @@ const FilterUserButton = ({ onFilterChange, selectedUser = "" }: FilterUserButto
                   <button
                     key={user}
                     onClick={() => handleSelect(user)}
-                    className={`flex flex-row items-center w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors text-sm ${
+                    className={`flex flex-row items-center justify-between w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors text-sm ${
                       selected === user ? 'bg-blue-50 text-[#2A529C]' : 'text-gray-700'
                     }`}
                   >
-                    <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-                      <img 
-                        src={avatar} 
-                        alt="profile" 
-                        className="w-8 h-8 object-cover" 
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                        <img 
+                          src={avatar} 
+                          alt="profile" 
+                          className="w-8 h-8 object-cover" 
+                        />
+                      </div>
+                      <div className="ml-3">
+                        {user}
+                      </div>
+                    </div>
+                    {/* เพิ่ม SVG arrow */}
+                    <svg 
+                      className="w-4 h-4 text-gray-400"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="m9 5 7 7-7 7"
                       />
-                    </div>
-                    <div className="ml-3">
-                      {user}
-                    </div>
+                    </svg>
                   </button>
                 ))}
               </>

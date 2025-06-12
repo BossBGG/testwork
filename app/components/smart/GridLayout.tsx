@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import mockFiles from "../../mockData/mockFiles.json";
 import FolderCard from "./Card/FolderCard";
 import FileCard from "./Card/FileCard";
 import GridDetail from "./GridDetail";
@@ -22,6 +21,7 @@ interface GridLayoutProps {
   filterType?: string;
   filterUser?: string;
   filterUpdate?: string;
+  files?: FileData[];
 }
 
 const GridLayout = ({
@@ -29,6 +29,7 @@ const GridLayout = ({
   filterType = "",
   filterUser = "",
   filterUpdate = "",
+  files: filesList = []
 }: GridLayoutProps) => {
   // State Management สำหรับ GridDetail
   const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
@@ -92,7 +93,7 @@ const GridLayout = ({
   };
 
   const getFilteredFiles = () => {
-    let filteredFiles = mockFiles.filter((file) => {
+    let filteredFiles = filesList.filter((file) => {
       // กรองตามชื่อไฟล์ (ค้นหาแบบ case-insensitive)
       const matchesSearch = file.fileName
         .toLowerCase()
@@ -136,7 +137,7 @@ const GridLayout = ({
   const filteredFiles = getFilteredFiles();
 
   const folders = filteredFiles.filter((file) => file.fileType === "โฟลเดอร์");
-  const files = filteredFiles.filter((file) => file.fileType !== "โฟลเดอร์");
+  const fileItems = filteredFiles.filter((file) => file.fileType !== "โฟลเดอร์");
 
   return (
     <div className="flex gap-4">
@@ -166,7 +167,7 @@ const GridLayout = ({
                 <div className="text-[14px] text-[#2A529C]">ไฟล์</div>
               </div>
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                {files.map((file: FileData) => (
+                {fileItems.map((file: FileData) => (
                   <div
                     key={file.fileName}
                     onClick={() => handleFileCardClick(file)}
