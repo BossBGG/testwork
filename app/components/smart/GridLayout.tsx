@@ -35,15 +35,7 @@ const GridLayout = ({
   const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
   const [showDetail, setShowDetail] = useState(false);
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return "-";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("th-TH", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
+  
 
   // ฟังก์ชันตรวจสอบวันที่ตาม filter
   const isDateInRange = (dateString: string | null, filterUpdate: string) => {
@@ -114,8 +106,8 @@ const GridLayout = ({
     return filteredFiles;
   };
 
-  // Handler สำหรับเมื่อคลิกที่ FileCard
-  const handleFileCardClick = (file: FileData) => {
+  // Handler สำหรับเมื่อคลิกดูรายละเอียดจากเมนู
+  const handleViewDetail = (file: FileData) => {
     setSelectedFile(file);
     setShowDetail(true);
   };
@@ -148,12 +140,12 @@ const GridLayout = ({
             {/* Folders Section */}
             <div className="">
               <div className="text-[14px] text-[#2A529C]">โฟลเดอร์</div>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
                 {folders.map((folder: FileData) => (
                   <FolderCard
                     key={folder.fileName}
                     folderName={folder.fileName}
-                    updatedAt={formatDate(folder.updatedAt)}
+                    updatedAt={folder.updatedAt}
                     onMenuAction={handleMenuAction}
                     onClick={() => handleFolderClick(folder.fileName)}
                   />
@@ -166,21 +158,18 @@ const GridLayout = ({
               <div>
                 <div className="text-[14px] text-[#2A529C]">ไฟล์</div>
               </div>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
                 {fileItems.map((file: FileData) => (
-                  <div
+                  <FileCard
                     key={file.fileName}
-                    onClick={() => handleFileCardClick(file)}
-                    className="cursor-pointer"
-                  >
-                    <FileCard
-                      fileName={file.fileName}
-                      fileType={file.fileType}
-                      fileImage={file.fileimage}
-                      updatedAt={formatDate(file.updatedAt)}
-                      onMenuAction={handleMenuAction}
-                    />
-                  </div>
+                    fileName={file.fileName}
+                    fileType={file.fileType}
+                    fileImage={file.fileimage}
+                    updatedAt={file.updatedAt}
+                    onMenuAction={handleMenuAction}
+                    onViewDetail={handleViewDetail} 
+                    fileData={file} 
+                  />
                 ))}
               </div>
             </div>
@@ -192,7 +181,7 @@ const GridLayout = ({
         )}
       </div>
 
-      {/* Detail Section */}
+      {/* Detail Section  */}
       {showDetail && (
         <div className="w-1/3 transition-all duration-300">
           <div className="sticky top-4">

@@ -4,6 +4,12 @@ import KPIicon from "../../../assets/KPI.png";
 import BIicon from "../../../assets/BI.png";
 import CVicon from "../../../assets/CV.png";
 import folderfieldicon from "../../../assets/folder2.png";
+import trashicon from "../../../assets/trash.png"; 
+import userplus from "../../../assets/user-plus.png"; 
+import pennib from "../../../assets/pen-nib.png"; 
+import copy from "../../../assets/copy.png"; 
+import share from "../../../assets/share.png"; 
+import view from "../../../assets/view.png"; 
 
 interface FileData {
   fileName: string;
@@ -24,8 +30,9 @@ interface FileCardProps {
   fileImage?: string; 
   updatedAt: string;
   onMenuAction?: (action: string, fileName: string) => void;
+  onViewDetail?: (fileData: FileData) => void; // เพิ่ม prop สำหรับดูรายละเอียด
+  fileData?: FileData; // เพิ่ม prop สำหรับข้อมูลไฟล์เต็ม
 }
-
 
 const FileCard = ({
   fileName,
@@ -33,14 +40,14 @@ const FileCard = ({
   fileImage,
   updatedAt,
   onMenuAction,
+  onViewDetail,
+  fileData,
 }: FileCardProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [hasImage, setHasImage] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
-  const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
-  const [showDetail, setShowDetail] = useState(false);
 
   // ฟังก์ชันเลือกไอคอนตามประเภทไฟล์
   const getFileIcon = (type: string) => {
@@ -58,18 +65,6 @@ const FileCard = ({
     }
   };
 
-  // Handler สำหรับเมื่อคลิกที่ FileCard
-  const handleFileCardClick = (file: FileData) => {
-    setSelectedFile(file);
-    setShowDetail(true);
-  };
-
-  // Handler สำหรับปิด GridDetail
-  const handleCloseDetail = () => {
-    setShowDetail(false);
-    setSelectedFile(null);
-  };
-
   function DefaultImage() {
     return (
       <img
@@ -80,15 +75,7 @@ const FileCard = ({
     );
   }
 
-  // ฟังก์ชันแปลงวันที่
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("th-TH", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
+  
 
   // คำนวณตำแหน่ง dropdown 
   const calculateMenuPosition = () => {
@@ -125,7 +112,10 @@ const FileCard = ({
   }, []);
 
   const handleMenuAction = (action: string) => {
-    if (onMenuAction) {
+    // ถ้าเป็นการดูรายละเอียดและมี callback และข้อมูลไฟล์
+    if (action === "view" && onViewDetail && fileData) {
+      onViewDetail(fileData);
+    } else if (onMenuAction) {
       onMenuAction(action, fileName);
     }
     setShowMenu(false);
@@ -139,12 +129,12 @@ const FileCard = ({
   };
 
   const menuItems = [
-    { icon: "✏️", label: "แก้ไข", action: "edit" },
-    { icon: "✏️", label: "ดูรายละเอียด", action: "view" },
-    { icon: "🔗", label: "แชร์", action: "share" },
-    { icon: "📝", label: "เปลี่ยนชื่อ", action: "rename" },
-    { icon: "📄", label: "ทำสำเนา", action: "copy" },
-    { icon: "🗑️", label: "ลบ", action: "delete" },
+    { icon: view, label: "ดูรายละเอียด", action: "view", isImage: true  },
+    { icon: userplus, label: "แก้ไข", action: "edit", isImage: true  },
+    { icon: share, label: "แชร์", action: "share", isImage: true  },
+    { icon: pennib, label: "เปลี่ยนชื่อ", action: "rename", isImage: true  },
+    { icon: copy, label: "ทำสำเนา", action: "copy", isImage: true  },
+    { icon: trashicon, label: "ลบ", action: "delete", isImage: true }, 
   ];
 
   return (
@@ -203,7 +193,7 @@ const FileCard = ({
         {/* Update Date  */}
         <div className="mt-auto  px-4">
           <p className="text-sm text-gray-500 ">
-            วันที่อัปเดต: {formatDate(updatedAt)}
+            วันที่อัปเดต: {updatedAt}
           </p>
         </div>
 
@@ -211,7 +201,7 @@ const FileCard = ({
         {showMenu && (
           <div 
             ref={menuRef}
-            className="absolute bg-white border border-gray-200 rounded-md shadow-lg z-50 w-48"
+            className="absolute bg-white border border-gray-200 rounded-md shadow-lg z-50 w-48 "
             style={{
               top: `${menuPosition.top}px`,
               left: `${menuPosition.left}px`,
@@ -223,7 +213,11 @@ const FileCard = ({
                 onClick={() => handleMenuAction(item.action)}
                 className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100 transition-colors `}
               >
-                <span className="text-base">{item.icon}</span>
+                {item.isImage ? (
+                  <img src={item.icon} alt="" className="w-4 h-4" />
+                ) : (
+                  <span className="text-base">{item.icon}</span>
+                )}
                 {item.label}
               </button>
             ))}

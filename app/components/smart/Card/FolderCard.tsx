@@ -1,5 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import folderfieldicon from "../../../assets/folder2.png";
+import trashicon from "../../../assets/trash.png"; 
+import userplus from "../../../assets/user-plus.png"; 
+import pennib from "../../../assets/pen-nib.png"; 
+import copy from "../../../assets/copy.png"; 
+import share from "../../../assets/share.png"; 
+import view from "../../../assets/view.png"; 
 
 interface FolderCardProps {
   folderName: string;
@@ -19,14 +25,7 @@ const FolderCard = ({
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
   // ฟังก์ชันแปลงวันที่
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("th-TH", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
+  
 
   // ปิด menu เมื่อคลิกข้างนอก
   useEffect(() => {
@@ -54,10 +53,12 @@ const FolderCard = ({
   };
 
   const menuItems = [
-    { icon: "✏️", label: "เปิด", action: "open" },
-    { icon: "📝", label: "เปลี่ยนชื่อ", action: "rename" },
-    { icon: "📄", label: "ทำสำเนา", action: "copy" },
-    { icon: "🗑️", label: "ลบ", action: "delete" },
+    { icon: view, label: "เปิด", action: "open", isImage: true  },
+    { icon: userplus, label: "แก้ไข", action: "edit", isImage: true  },
+    { icon: share, label: "แชร์", action: "share", isImage: true  },
+    { icon: pennib, label: "เปลี่ยนชื่อ", action: "rename", isImage: true  },
+    { icon: copy, label: "ทำสำเนา", action: "copy", isImage: true  },
+    { icon: trashicon, label: "ลบ", action: "delete", isImage: true }, 
   ];
 
   return (
@@ -81,14 +82,14 @@ const FolderCard = ({
           {/* Text Content */}
           <div className="flex-1 min-w-0">
             {/* Folder Name */}
-            <h3 className="text-sm font-medium text-gray-900 line-clamp-1 leading-tight truncate">
+            <h3 className="text-sm font-medium text-gray-900 line-clamp-1 leading-tight truncate mt-1">
               {folderName}
             </h3>
           </div>
         </div>
 
         {/* Right side - Menu Button */}
-        <div className="relative flex-shrink-0 items-center justify-content-center" ref={menuRef}>
+        <div className="absolute flex-shrink-0 items-center justify-content-center ml-58 mt-4" ref={menuRef}>
           <button
             onClick={handleMenuButtonClick}
             className="transition-opacity p-1 rounded-full hover:bg-gray-100"
@@ -116,7 +117,12 @@ const FolderCard = ({
                   onClick={(e) => handleMenuAction(item.action, e)}
                   className={`w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100 transition-colors `}
                 >
-                  <span className="text-base">{item.icon}</span>
+                  {item.isImage ? (
+                    <img src={item.icon} alt="" className="w-4 h-4" />
+                  ) : (
+                    <span className="text-base">{item.icon}</span>
+                  )}
+                  
                   {item.label}
                 </button>
               ))}
@@ -127,8 +133,8 @@ const FolderCard = ({
 
       {/* Bottom Section - Update Date */}
       <div className="mt-2">
-        <p className="text-xs text-gray-500 truncate">
-          วันที่อัปเดต: {formatDate(updatedAt)}
+        <p className="text-sm text-gray-500 truncate">
+          วันที่อัปเดต: {updatedAt}
         </p>
       </div>
     </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import listicon from "../../assets/list.png";
 import gridicon from "../../assets/grid.png";
@@ -81,8 +80,10 @@ const SwitchLayout = ({ viewMode = 'list', onViewModeChange }: SwitchLayoutProps
             <img 
               src={listicon} 
               alt="list" 
-              className={`w-4 h-4 transition-all  ${
-                currentView === 'list' ? 'filter brightness-0  invert' : ''
+              className={`w-4 h-4 transition-all ${
+                currentView === 'list' 
+                  ? 'filter brightness-0 invert' 
+                  : 'filter grayscale brightness-75'
               }`} 
             />
           </button>
@@ -98,7 +99,9 @@ const SwitchLayout = ({ viewMode = 'list', onViewModeChange }: SwitchLayoutProps
               src={gridicon} 
               alt="grid" 
               className={`w-4 h-4 transition-all ${
-                currentView === 'grid' ? 'filter brightness-0 invert' : ''
+                currentView === 'grid' 
+                  ? 'filter brightness-0 invert' 
+                  : 'filter grayscale brightness-75 '
               }`} 
             />
           </button>

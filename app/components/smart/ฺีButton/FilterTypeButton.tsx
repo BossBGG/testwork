@@ -47,6 +47,7 @@ const FilterTypeButton = ({ onFilterChange, selectedType = "" }: FilterTypeButto
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-between border border-[#DFDFE0] rounded-md p-4 w-40 h-10 hover:border-[#2A529C] transition-colors"
+        
       >
         <span className={`text-sm ${selected ? 'text-gray-700' : 'text-[#888888]'}`}>
           ประเภท : {getDisplayText()}

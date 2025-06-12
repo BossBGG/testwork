@@ -64,17 +64,7 @@ const GridDetail = ({ selectedFile, onClose }: GridDetailProps) => {
   };
 
   // ฟังก์ชันแปลงวันที่
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return "-";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("th-TH", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+ 
 
   // ถ้าไม่มีไฟล์ที่เลือก
   if (!selectedFile) {
@@ -132,9 +122,13 @@ const GridDetail = ({ selectedFile, onClose }: GridDetailProps) => {
 
       <div className="bg-white rounded-lg p-6">
         <div className="flex justify-between items-start mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-gray-900 justify-between">
             รายละเอียดไฟล์
           </h2>
+
+          <button className="flex h-8 w-14 items-center rounded-lg bg-[#2A529C] text-white px-2 justify-center "> 
+            เปิด
+          </button>
         </div>
 
         {/* File Image/Icon */}
@@ -212,7 +206,7 @@ const GridDetail = ({ selectedFile, onClose }: GridDetailProps) => {
               แก้ไขเมื่อ
             </span>
             <span className="text-sm text-gray-900 mr-4">
-              {formatDate(selectedFile.updatedAt)}
+              {selectedFile.updatedAt}
             </span>
           </div>
 
@@ -221,7 +215,7 @@ const GridDetail = ({ selectedFile, onClose }: GridDetailProps) => {
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-gray-500">เปิดเมื่อ</span>
             <span className="text-sm text-gray-900 mr-4">
-              {formatDate(selectedFile.lastOpenedAt)}
+              {selectedFile.lastOpenedAt}
             </span>
           </div>
 
@@ -232,7 +226,7 @@ const GridDetail = ({ selectedFile, onClose }: GridDetailProps) => {
               เผยแพร่เมื่อ
             </span>
             <span className="text-sm text-gray-900 mr-4">
-              {formatDate(selectedFile.publishedAt)}
+              {selectedFile.publishedAt}
             </span>
           </div>
 
@@ -243,7 +237,7 @@ const GridDetail = ({ selectedFile, onClose }: GridDetailProps) => {
               สร้างเมื่อ
             </span>
             <span className="text-sm text-gray-900 mr-4">
-              {formatDate(selectedFile.createdAt)}
+              {selectedFile.createdAt}
             </span>
           </div>
 
