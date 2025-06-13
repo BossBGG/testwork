@@ -13,14 +13,14 @@ const FilterUserButton = ({ onFilterChange, selectedUser = "" }: FilterUserButto
   const [selected, setSelected] = useState(selectedUser);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // รายการผู้ใช้ล่าสุด (สามารถเก็บใน localStorage หรือ state management)
+ 
   const [recentUsers, setRecentUsers] = useState<string[]>([
     "Alice Smith",
     "Bob Johnson",
     "Charlie Lee"
   ]);
 
-  // รายการผู้ใช้ทั้งหมด (จริงๆ ควรมาจาก API)
+  
   const allUsers = [
 
     "Alice Smith",
@@ -44,7 +44,7 @@ const FilterUserButton = ({ onFilterChange, selectedUser = "" }: FilterUserButto
   }, []);
 
   const handleSelect = (user: string) => {
-    // ถ้าคลิกผู้ใช้เดียวกันกับที่เลือกอยู่ ให้ยกเลิกการกรอง
+    
     if (selected === user) {
       setSelected("");
       setIsOpen(false);
@@ -59,7 +59,7 @@ const FilterUserButton = ({ onFilterChange, selectedUser = "" }: FilterUserButto
     setIsOpen(false);
     setSearchTerm("");
     
-    // เพิ่มผู้ใช้ลงในรายการล่าสุด
+    
     const updatedRecent = [user, ...recentUsers.filter(u => u !== user)].slice(0, 3);
     setRecentUsers(updatedRecent);
     
@@ -200,7 +200,7 @@ const FilterUserButton = ({ onFilterChange, selectedUser = "" }: FilterUserButto
                         {user}
                       </div>
                     </div>
-                    {/* เพิ่ม SVG arrow */}
+                   
                     <svg 
                       className="w-4 h-4 text-gray-400"
                       aria-hidden="true"

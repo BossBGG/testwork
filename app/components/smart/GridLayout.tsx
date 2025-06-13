@@ -29,55 +29,60 @@ const GridLayout = ({
   filterType = "",
   filterUser = "",
   filterUpdate = "",
-  files: filesList = []
+  files: filesList = [],
 }: GridLayoutProps) => {
   // State Management สำหรับ GridDetail
   const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
   const [showDetail, setShowDetail] = useState(false);
 
-  
-
   // ฟังก์ชันตรวจสอบวันที่ตาม filter
   const isDateInRange = (dateString: string | null, filterUpdate: string) => {
     if (!filterUpdate || !dateString) return true;
-    
+
     const fileDate = new Date(dateString);
     const today = new Date();
-    today.setHours(23, 59, 59, 999); // สิ้นสุดวัน
-    
+    today.setHours(23, 59, 59, 999);
+
     switch (filterUpdate) {
-      case 'today':
+      case "today":
         const startOfToday = new Date(today);
         startOfToday.setHours(0, 0, 0, 0);
         return fileDate >= startOfToday && fileDate <= today;
-        
-      case '7days':
+
+      case "7days":
         const sevenDaysAgo = new Date(today);
         sevenDaysAgo.setDate(today.getDate() - 7);
         return fileDate >= sevenDaysAgo && fileDate <= today;
-        
-      case '30days':
+
+      case "30days":
         const thirtyDaysAgo = new Date(today);
         thirtyDaysAgo.setDate(today.getDate() - 30);
         return fileDate >= thirtyDaysAgo && fileDate <= today;
-        
-      case 'thisYear':
+
+      case "thisYear":
         const startOfYear = new Date(today.getFullYear(), 0, 1);
-        const endOfYear = new Date(today.getFullYear(), 11, 31, 23, 59, 59, 999);
+        const endOfYear = new Date(
+          today.getFullYear(),
+          11,
+          31,
+          23,
+          59,
+          59,
+          999
+        );
         return fileDate >= startOfYear && fileDate <= endOfYear;
-        
-      case 'lastYear':
+
+      case "lastYear":
         const lastYear = today.getFullYear() - 1;
         const startOfLastYear = new Date(lastYear, 0, 1);
         const endOfLastYear = new Date(lastYear, 11, 31, 23, 59, 59, 999);
         return fileDate >= startOfLastYear && fileDate <= endOfLastYear;
-        
+
       default:
-        // Handle custom date range (format: "YYYY-MM-DD_YYYY-MM-DD")
-        if (filterUpdate.includes('_')) {
-          const [startDate, endDate] = filterUpdate.split('_');
-          const start = new Date(startDate + 'T00:00:00');
-          const end = new Date(endDate + 'T23:59:59');
+        if (filterUpdate.includes("_")) {
+          const [startDate, endDate] = filterUpdate.split("_");
+          const start = new Date(startDate + "T00:00:00");
+          const end = new Date(endDate + "T23:59:59");
           return fileDate >= start && fileDate <= end;
         }
         return true;
@@ -86,7 +91,7 @@ const GridLayout = ({
 
   const getFilteredFiles = () => {
     let filteredFiles = filesList.filter((file) => {
-      // กรองตามชื่อไฟล์ (ค้นหาแบบ case-insensitive)
+      // กรองตามชื่อไฟล์
       const matchesSearch = file.fileName
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -112,6 +117,13 @@ const GridLayout = ({
     setShowDetail(true);
   };
 
+  // Handler สำหรับคลิกขวาเพื่อเปิด GridDetail
+  const handleContextMenu = (event: React.MouseEvent, file: FileData) => {
+    event.preventDefault(); // ป้องกัน context menu ปกติของเบราว์เซอร์
+    setSelectedFile(file);
+    setShowDetail(true);
+  };
+
   // Handler สำหรับปิด GridDetail
   const handleCloseDetail = () => {
     setShowDetail(false);
@@ -129,50 +141,58 @@ const GridLayout = ({
   const filteredFiles = getFilteredFiles();
 
   const folders = filteredFiles.filter((file) => file.fileType === "โฟลเดอร์");
-  const fileItems = filteredFiles.filter((file) => file.fileType !== "โฟลเดอร์");
+  const fileItems = filteredFiles.filter(
+    (file) => file.fileType !== "โฟลเดอร์"
+  );
 
   return (
-    <div className="flex gap-4">
-      {/* Grid Section */}
-      <div className={`transition-all duration-300 ${showDetail ? 'w-2/3' : 'w-full'}`}>
+    <div className="relative flex">
+      {/* Grid Section - ใช้ width คงที่แทนการเปลี่ยนแปลง */}
+      <div className={`transition-none ${showDetail ? "w-[calc(100%-400px)]" : "w-full"}`}>
         {filteredFiles.length > 0 ? (
           <div className="flex flex-col gap-4 p-4">
             {/* Folders Section */}
-            <div className="">
-              <div className="text-[14px] text-[#2A529C]">โฟลเดอร์</div>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                {folders.map((folder: FileData) => (
-                  <FolderCard
-                    key={folder.fileName}
-                    folderName={folder.fileName}
-                    updatedAt={folder.updatedAt}
-                    onMenuAction={handleMenuAction}
-                    onClick={() => handleFolderClick(folder.fileName)}
-                  />
-                ))}
+            {folders.length > 0 && (
+              <div className="">
+                <div className="text-[14px] text-[#2A529C]">โฟลเดอร์</div>
+                <div className="mt-4 grid gap-8 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-5">
+                  {folders.map((folder: FileData) => (
+                    <FolderCard
+                      key={folder.fileName}
+                      folderName={folder.fileName}
+                      updatedAt={folder.updatedAt}
+                      onMenuAction={handleMenuAction}
+                      onClick={() => handleFolderClick(folder.fileName)}
+                      onContextMenu={(event) => handleContextMenu(event, folder)}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Files Section */}
-            <div>
+            {fileItems.length > 0 && (
               <div>
-                <div className="text-[14px] text-[#2A529C]">ไฟล์</div>
+                <div>
+                  <div className="text-[14px] text-[#2A529C]">ไฟล์</div>
+                </div>
+                <div className="mt-4 grid gap-8 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-5">
+                  {fileItems.map((file: FileData) => (
+                    <FileCard
+                      key={file.fileName}
+                      fileName={file.fileName}
+                      fileType={file.fileType}
+                      fileImage={file.fileimage}
+                      updatedAt={file.updatedAt}
+                      onMenuAction={handleMenuAction}
+                      onViewDetail={handleViewDetail}
+                      onContextMenu={(event) => handleContextMenu(event, file)}
+                      fileData={file}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                {fileItems.map((file: FileData) => (
-                  <FileCard
-                    key={file.fileName}
-                    fileName={file.fileName}
-                    fileType={file.fileType}
-                    fileImage={file.fileimage}
-                    updatedAt={file.updatedAt}
-                    onMenuAction={handleMenuAction}
-                    onViewDetail={handleViewDetail} 
-                    fileData={file} 
-                  />
-                ))}
-              </div>
-            </div>
+            )}
           </div>
         ) : (
           <div className="p-4">
@@ -181,10 +201,10 @@ const GridLayout = ({
         )}
       </div>
 
-      {/* Detail Section  */}
+      {/* Detail Section - Fixed position */}
       {showDetail && (
-        <div className="w-1/3 transition-all duration-300">
-          <div className="sticky top-4">
+        <div className="w-[400px] border-l border-gray-200 bg-white">
+          <div className="h-full overflow-y-auto">
             <GridDetail
               selectedFile={selectedFile}
               onClose={handleCloseDetail}

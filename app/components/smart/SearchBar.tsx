@@ -22,12 +22,12 @@ function SearchBar({ className = '', onSearch, placeholder = "ค้นหา" }
         }
     };
 
-    // Real-time search - ค้นหาทันทีเมื่อพิมพ์
+    
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newQuery = e.target.value;
         setQuery(newQuery);
         
-        // ส่งค่าการค้นหาทันทีเมื่อมีการเปลี่ยนแปลง
+        
         if (onSearch) {
             onSearch(newQuery);
         }

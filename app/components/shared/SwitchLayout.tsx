@@ -80,7 +80,7 @@ const SwitchLayout = ({ viewMode = 'list', onViewModeChange }: SwitchLayoutProps
             <img 
               src={listicon} 
               alt="list" 
-              className={`w-4 h-4 transition-all ${
+              className={`w-3 h-3 transition-all ${
                 currentView === 'list' 
                   ? 'filter brightness-0 invert' 
                   : 'filter grayscale brightness-75'
@@ -90,6 +90,7 @@ const SwitchLayout = ({ viewMode = 'list', onViewModeChange }: SwitchLayoutProps
           <button 
             onClick={() => handleViewChange('grid')}
             className={`w-10 h-10 flex items-center justify-center rounded-r-md transition-all ${
+              
               currentView === 'grid' 
                 ? 'bg-[#2A529C]' 
                 : 'bg-[#F5F5F5] hover:bg-[#2A529C] hover:bg-opacity-20'
@@ -98,7 +99,7 @@ const SwitchLayout = ({ viewMode = 'list', onViewModeChange }: SwitchLayoutProps
             <img 
               src={gridicon} 
               alt="grid" 
-              className={`w-4 h-4 transition-all ${
+              className={`w-3 h-3 transition-all ${
                 currentView === 'grid' 
                   ? 'filter brightness-0 invert' 
                   : 'filter grayscale brightness-75 '

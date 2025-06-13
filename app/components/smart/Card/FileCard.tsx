@@ -30,8 +30,9 @@ interface FileCardProps {
   fileImage?: string; 
   updatedAt: string;
   onMenuAction?: (action: string, fileName: string) => void;
-  onViewDetail?: (fileData: FileData) => void; // เพิ่ม prop สำหรับดูรายละเอียด
-  fileData?: FileData; // เพิ่ม prop สำหรับข้อมูลไฟล์เต็ม
+  onViewDetail?: (fileData: FileData) => void; 
+  onContextMenu?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  fileData?: FileData; 
 }
 
 const FileCard = ({
@@ -41,6 +42,7 @@ const FileCard = ({
   updatedAt,
   onMenuAction,
   onViewDetail,
+  onContextMenu,
   fileData,
 }: FileCardProps) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -139,7 +141,10 @@ const FileCard = ({
 
   return (
     <>
-      <div className="file-card-container w-[282px] h-[302px] bg-white rounded-lg border border-gray-200  hover:shadow-md transition-shadow relative group">
+      <div className="file-card-container w-[282px] h-[302px] bg-white rounded-lg border border-gray-200  hover:shadow-md transition-shadow relative group"
+      
+      onContextMenu={onContextMenu}
+      >
         {/* Header with menu button */}
         <div className="flex justify-between items-start ">
           <div className="flex-1">

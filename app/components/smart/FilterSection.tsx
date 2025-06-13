@@ -61,9 +61,9 @@ const FilterSection = ({
   };
 
   return (
-    <div>
-      <div className='flex flex-row justify-between items-center p-4'>
-        {/* Left side - CreateFileButton + About Icon + Filter Buttons */}
+    <div className='bg-white'>
+      <div className='flex flex-row justify-between items-center p-4 '>
+       
         <div className='flex flex-row items-center gap-6'>
           <CreateFileButton onFileCreated={handleFileCreated} />
           

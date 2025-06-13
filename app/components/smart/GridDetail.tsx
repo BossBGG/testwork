@@ -25,7 +25,7 @@ interface GridDetailProps {
 
 const GridDetail = ({ selectedFile, onClose }: GridDetailProps) => {
   const [description, setDescription] = useState("");
-  const maxChars = 250; // เปลี่ยนจากนับคำเป็นนับตัวอักษร
+  const maxChars = 250; 
 
   // ฟังก์ชันเลือกไอคอนตามประเภทไฟล์
   const getFileIcon = (type: string) => {
@@ -58,7 +58,7 @@ const GridDetail = ({ selectedFile, onClose }: GridDetailProps) => {
   // ถ้าไม่มีไฟล์ที่เลือก
   if (!selectedFile) {
     return (
-      <div className="w-full h-64 flex items-center justify-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+      <div className="w-full h-64 flex items-center justify-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 z-50">
         <div className="text-center">
           <svg
             className="w-12 h-12 text-gray-400 mx-auto mb-2"

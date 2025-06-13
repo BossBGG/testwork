@@ -46,21 +46,23 @@ const ImoDesignerDetail = ({
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   // ฟังก์ชันแปลงวันที่จากรูปแบบ DD/MM/YYYY เป็น Date object
-  const parseThaiDate = (dateString: string) => {
+  const parseDate = (dateString: string) => {
     if (!dateString) return null;
-    const [day, month, year] = dateString.split('/');
+    const [day, month, year] = dateString.split("/");
     // แปลงปี พ.ศ. เป็น ค.ศ.
-    const gregorianYear = parseInt(year) - 543;
-    return new Date(gregorianYear, parseInt(month) - 1, parseInt(day));
+
+    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
   };
 
   // ฟังก์ชันตรวจสอบวันที่ตาม filter
   const isDateInRange = (dateString: string | null, filterUpdate: string) => {
     if (!filterUpdate || !dateString) return true;
 
-    const fileDate = parseThaiDate(dateString);
+    const fileDate = parseDate(dateString);
     if (!fileDate) return true;
 
     const today = new Date();
@@ -84,7 +86,15 @@ const ImoDesignerDetail = ({
 
       case "thisYear":
         const startOfYear = new Date(today.getFullYear(), 0, 1);
-        const endOfYear = new Date(today.getFullYear(), 11, 31, 23, 59, 59, 999);
+        const endOfYear = new Date(
+          today.getFullYear(),
+          11,
+          31,
+          23,
+          59,
+          59,
+          999
+        );
         return fileDate >= startOfYear && fileDate <= endOfYear;
 
       case "lastYear":
@@ -94,7 +104,6 @@ const ImoDesignerDetail = ({
         return fileDate >= startOfLastYear && fileDate <= endOfLastYear;
 
       default:
-        // Handle custom date range (format: "YYYY-MM-DD_YYYY-MM-DD")
         if (filterUpdate.includes("_")) {
           const [startDate, endDate] = filterUpdate.split("_");
           const start = new Date(startDate + "T00:00:00");
@@ -118,7 +127,7 @@ const ImoDesignerDetail = ({
   // ฟังก์ชันกรองข้อมูล
   const getFilteredAndSortedFiles = () => {
     let filteredFiles = files.filter((file) => {
-      // กรองตามชื่อไฟล์ (ค้นหาแบบ case-insensitive)
+      // กรองตามชื่อไฟล์
       const matchesSearch = file.fileName
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -141,20 +150,20 @@ const ImoDesignerDetail = ({
 
       switch (sortField) {
         case "createdAt":
-          aDate = parseThaiDate(a.createdAt);
-          bDate = parseThaiDate(b.createdAt);
+          aDate = parseDate(a.createdAt);
+          bDate = parseDate(b.createdAt);
           break;
         case "updatedAt":
-          aDate = parseThaiDate(a.updatedAt);
-          bDate = parseThaiDate(b.updatedAt);
+          aDate = parseDate(a.updatedAt);
+          bDate = parseDate(b.updatedAt);
           break;
         case "publishedAt":
-          aDate = parseThaiDate(a.publishedAt || "");
-          bDate = parseThaiDate(b.publishedAt || "");
+          aDate = parseDate(a.publishedAt || "");
+          bDate = parseDate(b.publishedAt || "");
           break;
         default:
-          aDate = parseThaiDate(a.updatedAt);
-          bDate = parseThaiDate(b.updatedAt);
+          aDate = parseDate(a.updatedAt);
+          bDate = parseDate(b.updatedAt);
       }
 
       // Handle null dates
@@ -219,13 +228,57 @@ const ImoDesignerDetail = ({
     { icon: trashicon, label: "ลบ", action: "delete", isImage: true },
   ];
 
+  const getPaginationButtons = () => {
+    const buttons = [];
+    const maxButtons = 5;
+
+    if (totalPages <= maxButtons) {
+      for (let i = 1; i <= totalPages; i++) {
+        buttons.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 5; i++) {
+          buttons.push(i);
+        }
+      } else if (currentPage >= totalPages - 2) {
+        for (let i = totalPages - 4; i <= totalPages; i++) {
+          buttons.push(i);
+        }
+      } else {
+        for (let i = currentPage - 2; i <= currentPage + 2; i++) {
+          buttons.push(i);
+        }
+      }
+    }
+
+    return buttons;
+  };
+
   const filteredFiles = getFilteredAndSortedFiles();
 
+  const totalPages = Math.ceil(filteredFiles.length / itemsPerPage);
+
+  const paginte = (pageNumber: number) => {
+    if (pageNumber < 1 || pageNumber > totalPages) return;
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // เพิ่ม state สำหรับ pagination
+  const getCurrentPageData = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredFiles.slice(startIndex, endIndex);
+  };
+
+  const currentPageData = getCurrentPageData();
+
   return (
-    <div className="bg-[#EFF2F9]">
-      <div className="overflow-x-auto rounded-lg border border-[#DFDFE0]">
+    <div className="bg-white">
+      <div className="overflow-x-auto rounded-xl  border border-[#DFDFE0]">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <thead className="bg-[#EFF2F9]">
             <tr>
               <th
                 scope="col"
@@ -284,14 +337,17 @@ const ImoDesignerDetail = ({
                   )}
                 </div>
               </th>
-              <th scope="col" className="relative px-6 py-3 text-center border border-[#DFDFE0]">
+              <th
+                scope="col"
+                className="relative px-6 py-3 text-center border border-[#DFDFE0]"
+              >
                 <span className="sr-only">Actions</span>
               </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredFiles.length > 0 ? (
-              filteredFiles.map((file, index) => (
+            {currentPageData.length > 0 ? (
+              currentPageData.map((file, index) => (
                 <tr
                   key={`${file.fileName}-${index}`}
                   className="hover:bg-gray-50"
@@ -336,7 +392,9 @@ const ImoDesignerDetail = ({
                   </td>
                   <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-500 text-center ">
                     <div
-                      ref={(el) => (dropdownRefs.current[file.fileName] = el)}
+                      ref={(el) =>
+                        void (dropdownRefs.current[file.fileName] = el)
+                      }
                       className="relative flex justify-center"
                     >
                       <button
@@ -408,6 +466,85 @@ const ImoDesignerDetail = ({
           </tbody>
         </table>
       </div>
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="h-[64px] min-w-full bg-white  mt-4 shadow-md items-center flex flex-row justify-between">
+          <div className="text-md text-black p-4">
+            Showing {(currentPage - 1) * itemsPerPage + 1}-
+            {Math.min(currentPage * itemsPerPage, filteredFiles.length)} of{" "}
+            {filteredFiles.length}
+          </div>
+
+          <div className="flex flex-row justify-center items-center">
+            {/* Previous Button */}
+            <button
+              onClick={() => paginte(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`p-2 rounded-md mr-2 border border-gray-300 ${
+                currentPage === 1
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-gray-100"
+              }`}
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+
+            {/* Page Numbers */}
+            {getPaginationButtons().map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => paginte(pageNumber)}
+                className={`px-3 py-2 rounded-md mr-2 border border-gray-300 ${
+                  currentPage === pageNumber
+                    ? "bg-[#E3E9F8]  border-blue-500 text-[#3B81CE]"
+                    : "hover:bg-gray-100"
+                }`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+
+            {/* Next Button */}
+            <button
+              onClick={() => paginte(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`p-2 rounded-md border border-gray-300 ${
+                currentPage === totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-gray-100"
+              }`}
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

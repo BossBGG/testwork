@@ -12,6 +12,7 @@ interface FolderCardProps {
   updatedAt: string;
   onMenuAction?: (action: string, folderName: string) => void;
   onClick?: () => void;
+  onContextMenu?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const FolderCard = ({
@@ -19,6 +20,7 @@ const FolderCard = ({
   updatedAt,
   onMenuAction,
   onClick,
+  onContextMenu,
 }: FolderCardProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -29,6 +31,7 @@ const FolderCard = ({
 
   // ปิด menu เมื่อคลิกข้างนอก
   useEffect(() => {
+
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setShowMenu(false);
@@ -65,6 +68,7 @@ const FolderCard = ({
     <div
       className="w-[282px] h-[82px] bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-shadow cursor-pointer relative group flex flex-col justify-between"
       onClick={onClick}
+      onContextMenu={onContextMenu}
     >
       {/* Top Section - Content Container */}
       <div className="flex items-start justify-between">

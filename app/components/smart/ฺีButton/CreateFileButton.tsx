@@ -142,44 +142,7 @@ const CreateFileButton = ({ onFileCreated }: CreateFileButtonProps) => {
         )}
       </div>
 
-      {/* Modal สำหรับใส่ชื่อไฟล์ */}
-      {/* {showNameModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
-          <div className="bg-white rounded-lg p-6  w-96 max-w-[90vw]">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              สร้าง{selectedType}ใหม่
-            </h3>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                ชื่อ{selectedType}
-              </label>
-              <input
-                type="text"
-                value={fileName}
-                onChange={(e) => setFileName(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder={`ใส่ชื่อ${selectedType}`}
-                autoFocus
-              />
-            </div>
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={handleCancel}
-                className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-              >
-                ยกเลิก
-              </button>
-              <button
-                onClick={handleCreateFile}
-                disabled={!fileName.trim()}
-                className="px-4 py-2 text-sm text-white bg-[#2A529C] rounded-md hover:bg-[#1e3a6f] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-              >
-                สร้าง
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
+     
     </>
   );
 };
